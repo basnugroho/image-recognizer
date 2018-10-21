@@ -109,4 +109,35 @@ class Classify(Resource):
             }
         })
         return retJson
+
+class Refill(Resource):
+    def post(self):
+        postedData = request.get_json()
+
+        username = postedData["username"]
+        password = postedData["admin_pw"]
+        amount = postedData["amount"]
+
+        if not UserExist(username):
+            return jsonify(generateReturnDictionary(301, "Invalid Username"))
+
+        correct_pw = "abc123"
         
+        if not password == correct_pw:
+            return jsonify(generateReturnDictionary(302, "Invalid admin password"))
+
+        users.update({
+            "Username": username
+        }, {
+            "$set": {
+                "Tokens": amount
+            }
+        })
+        return jsonify(generateReturnDictionary(200, "Refill Success"))
+
+api.add_resource(Register, "/register")
+api.add_resource(Classify, "/classify")
+api.add_resource(Refill, "/refill")
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0')
