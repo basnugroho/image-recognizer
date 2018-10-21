@@ -2,6 +2,8 @@ from flask import Flask, jsonify, request
 from flask_restful import Api, Resource
 from pymongo import MongoClient
 import bcrypt
+import numpy
+#import tensorflow as tf
 import requests
 import subprocess
 import json
@@ -14,7 +16,7 @@ db = client.ImageRecognition
 users = db['Users']
 
 def UserExist(username):
-    if users.find({"Username": username}).count()==0:
+    if len(users.find({"Username": username})) <= 0:
         return False
     else:
         return True
